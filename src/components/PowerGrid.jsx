@@ -1,5 +1,6 @@
 import React from 'react';
 import './PowerGrid.css';
+import eventBus from '../eventBus';
 
 const ZONES = [
   { id: 'A', name: 'Downtown Sector', mw: 120 },
@@ -26,8 +27,17 @@ export default function PowerGrid() {
         <span className="city-power">CITY POWER: {cityPower}%</span>
       </div>
 
-      <button className="simulate-btn" disabled>
-        SIMULATE TODO
+      <button
+        className="simulate-btn"
+        onClick={() =>
+          eventBus.emit('power:outage', {
+            zones: ['A', 'B'],
+            severity: 'partial',
+            cityPower: 72,
+          })
+        }
+      >
+        SIMULATE OUTAGE
       </button>
 
       <div className="power-bar-track">
