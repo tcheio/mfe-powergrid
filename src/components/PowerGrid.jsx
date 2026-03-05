@@ -1,30 +1,50 @@
 import React from 'react';
 import './PowerGrid.css';
 
+const ZONES = [
+  { id: 'A', name: 'Downtown Sector', mw: 120 },
+  { id: 'B', name: 'Industrial Bay', mw: 95 },
+  { id: 'C', name: 'Neon Heights', mw: 78 },
+  { id: 'D', name: 'Old Grid', mw: 64 },
+  { id: 'E', name: 'Harbor Lines', mw: 88 },
+  { id: 'F', name: 'Metro Core', mw: 110 },
+];
+
 export default function PowerGrid() {
+  const cityPower = 100; 
+  const showFailure = false; 
+
+  const powerBarStyle = {
+    width: `${Math.max(0, Math.min(100, cityPower))}%`,
+    background: cityPower === 0 ? '#ff003c' : '#00ff88',
+  };
+
   return (
     <div className="powergrid">
       <div className="grid-header">
-        <span className="grid-title">POWER GRID - STUDENT STARTER</span>
-        <span className="city-power">TODO</span>
+        <span className="grid-title">POWER GRID</span>
+        <span className="city-power">CITY POWER: {cityPower}%</span>
       </div>
 
       <button className="simulate-btn" disabled>
-        SIMULATE BLACKOUT (TODO)
+        SIMULATE TODO
       </button>
 
       <div className="power-bar-track">
-        <div className="power-bar-fill" style={{ width: '25%' }} />
+        <div className="power-bar-fill" style={powerBarStyle} />
       </div>
 
-      <div className="blackout-alert">TODO: manage zones and outages.</div>
+      {showFailure && <div className="blackout-alert">GRID FAILURE</div>}
 
       <div className="zones-grid">
-        <div className="zone">
-          <div className="zone-id">Expected events</div>
-          <div className="zone-name">listen: hacker:command, weather:change</div>
-          <div className="zone-power">emit: power:outage</div>
-        </div>
+        {ZONES.map((z) => (
+          <div key={z.id} className="zone zone-online">
+            <div className="zone-indicator" style={{ background: '#00ff88' }} />
+            <div className="zone-id">ZONE {z.id}</div>
+            <div className="zone-name">{z.name}</div>
+            <div className="zone-power">{z.mw} MW</div>
+          </div>
+        ))}
       </div>
     </div>
   );
