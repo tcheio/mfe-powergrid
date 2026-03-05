@@ -1,0 +1,47 @@
+.powergrid {
+  background: #0d1117;
+  color: #00ff88;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  padding: 12px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.grid-header { display: flex; justify-content: space-between; align-items: center; }
+.grid-title { color: #ff8800; font-weight: bold; font-size: 0.8rem; }
+.city-power { font-size: 0.85rem; font-weight: bold; }
+.power-bar-track { height: 6px; background: #1a2332; border-radius: 3px; }
+.power-bar-fill  { height: 6px; border-radius: 3px; }
+.blackout-alert {
+  color: #ff003c; text-align: center; font-weight: bold;
+  animation: pulse 0.5s infinite; border: 1px solid #ff003c; padding: 4px;
+}
+.zones-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; flex: 1; }
+.zone {
+  border: 1px solid #1a2332; border-radius: 4px; padding: 6px;
+  position: relative; transition: border-color 0.5s, background 0.5s;
+}
+.zone.zone-offline { background: #0a0a0a; }
+.zone.zone-warning { background: #1a1200; }
+.zone.zone-critical { background: #1a0500; animation: pulse 1s infinite; }
+.zone-id { font-size: 0.9rem; font-weight: bold; }
+.zone-name { font-size: 0.6rem; color: #4a5568; }
+.zone-power { font-size: 0.8rem; font-weight: bold; }
+.zone-indicator {
+  position: absolute; top: 6px; right: 6px;
+  width: 8px; height: 8px; border-radius: 50%;
+  transition: background 0.5s;
+}
+.zone.zone-online .zone-indicator { animation: pulse 2s infinite; }
+.simulate-btn {
+  order: -1;
+  flex: 0 0 auto;
+  align-self: flex-end;
+  margin-bottom: 4px;
+  padding: 6px; background: transparent; border: 1px dashed #333;
+  color: #4a5568; font-family: 'Courier New', monospace; font-size: 0.7rem; cursor: pointer;
+}
+.simulate-btn:hover { border-color: #ff8800; color: #ff8800; }
+@keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.3 } }
