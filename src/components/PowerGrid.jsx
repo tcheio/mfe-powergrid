@@ -1,23 +1,47 @@
-import React from 'react';
-import './PowerGrid.css';
-import eventBus from '../eventBus';
+import React, { useState, useEffect } from "react";
+import "./PowerGrid.css";
+import eventBus from "../eventBus";
 
 const ZONES = [
-  { id: 'A', name: 'Downtown Sector', mw: 120 },
-  { id: 'B', name: 'Industrial Bay', mw: 95 },
-  { id: 'C', name: 'Neon Heights', mw: 78 },
-  { id: 'D', name: 'Old Grid', mw: 64 },
-  { id: 'E', name: 'Harbor Lines', mw: 88 },
-  { id: 'F', name: 'Metro Core', mw: 110 },
+  { id: "A", name: "Downtown Sector", mw: 120 },
+  { id: "B", name: "Industrial Bay", mw: 95 },
+  { id: "C", name: "Neon Heights", mw: 78 },
+  { id: "D", name: "Old Grid", mw: 64 },
+  { id: "E", name: "Harbor Lines", mw: 88 },
+  { id: "F", name: "Metro Core", mw: 110 },
 ];
 
 export default function PowerGrid() {
-  const cityPower = 100; 
-  const showFailure = false; 
+  const [cityPower, setCityPower] = useState(100);
+  const [showFailure, setShowFailure] = useState(false);
+
+  useEffect(() => {
+    const unsubWeather = eventBus.on("weather:change", ({ intensity }) => {
+      const newPower = Math.max(0, 100 - intensity);
+      setCityPower(newPower);
+      if (newPower === 0) setShowFailure(true);
+      else setShowFailure(false);
+    });
+
+    const unsubHacker = eventBus.on("hacker:command", ({ command }) => {
+      if (command === "shutdown") {
+        setCityPower(0);
+        setShowFailure(true);
+      } else if (command === "restore") {
+        setCityPower(100);
+        setShowFailure(false);
+      }
+    });
+
+    return () => {
+      unsubWeather();
+      unsubHacker();
+    };
+  }, []);
 
   const powerBarStyle = {
     width: `${Math.max(0, Math.min(100, cityPower))}%`,
-    background: cityPower === 0 ? '#ff003c' : '#00ff88',
+    background: cityPower === 0 ? "#ff003c" : "#00ff88",
   };
 
   return (
@@ -30,9 +54,9 @@ export default function PowerGrid() {
       <button
         className="simulate-btn"
         onClick={() =>
-          eventBus.emit('power:outage', {
-            zones: ['A', 'B'],
-            severity: 'partial',
+          eventBus.emit("power:outage", {
+            zones: ["A", "B"],
+            severity: "partial",
             cityPower: 72,
           })
         }
@@ -49,7 +73,7 @@ export default function PowerGrid() {
       <div className="zones-grid">
         {ZONES.map((z) => (
           <div key={z.id} className="zone zone-online">
-            <div className="zone-indicator" style={{ background: '#00ff88' }} />
+            <div className="zone-indicator" style={{ background: "#00ff88" }} />
             <div className="zone-id">ZONE {z.id}</div>
             <div className="zone-name">{z.name}</div>
             <div className="zone-power">{z.mw} MW</div>
